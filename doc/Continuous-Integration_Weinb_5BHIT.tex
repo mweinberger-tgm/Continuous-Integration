@@ -82,7 +82,29 @@ Viel Spaß! :)
 \section{Durchführung}
 
 \subsection{Jenkins installieren}
-Ich habe mich entschieden, Jenkins in einer virtuellen Instanz zu installieren.
+Ich habe mich entschieden Jenkins in einer virtuellen Instanz zu installieren. Verwendet wurde Ubuntu 15.10 unter VMware Workstation 12. Folgende Befehle waren notwendig: \\
+
+\begin{lstlisting}[frame=single,language=bash, caption=Jenkins in Ubuntu installieren \cite{jenins}]
+wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
+sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt-get update
+sudo apt-get install jenkins
+\end{lstlisting}
+
+Sollte der Port 8080 bereits belegt sein und /etc/init.d/jenkins fehlschlägt, muss in /etc/default/jenkins der Wert bspw. auf 'HTTP\_PORT=8081' gesetzt werden.
+
+\subsection{Installieren der notwendigen Plugins}
+Im Menüpunkt 'Jenkins verwalten' findet sich der Punkt 'Plugins verwalten'. Im Reiter 'Verfügbar' lassen sich die drei benötigten Plugins \texttt{Git Plugin, Violations \& Cobertura} auswählen und installieren, Jenkins wird per Klick auf die Checkbox neu gestartet, damit die Erweiterungen auch ausgeführt werden. \\
+Das Git Plugin integriert, wie der Name sagt, die Git-Unterstützung in Jenkins, zusätzlich habe ich das Github Authentication Plugin installiert, um eine Authentifizierung per Github OAuth zu gewährleisten. Violations überprüft den Code auf Verstöße gegen Coding-Richtlinien, und Cobertura stellt Coverage-Reports bereit. 
+
+\subsection{Installieren von Nose und Pylint}
+
+\begin{lstlisting}[frame=single,language=bash, caption=Nose und Pylint mit pip installieren]
+sudo pip install nose
+sudo pip install pylint
+\end{lstlisting}
+
+
 
 \clearpage
 
