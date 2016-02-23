@@ -13,7 +13,7 @@
 
 \gdef\myversion{1.0}
 \gdef\mybegin{9. Februar 2016}
-\gdef\myfinish{\today}
+\gdef\myfinish{16. Februar 2016}
 
 \gdef\mygrade{Note:}
 \gdef\myteacher{Betreuer: Dolezal/Vittori}
@@ -84,7 +84,7 @@ Viel Spaß! :)
 \subsection{Jenkins installieren}
 Ich habe mich entschieden Jenkins in einer virtuellen Instanz zu installieren. Verwendet wurde Ubuntu 15.10 unter VMware Workstation 12. Folgende Befehle waren notwendig: \\
 
-\begin{lstlisting}[frame=single,language=bash, caption=Jenkins in Ubuntu installieren \cite{jenins}]
+\begin{lstlisting}[frame=single,language=bash, caption=Jenkins in Ubuntu installieren \cite{jenkins}]
 wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
 sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
 sudo apt-get update
@@ -104,7 +104,76 @@ sudo pip install nose
 sudo pip install pylint
 \end{lstlisting}
 
-\texttt{Nose} kümmert sich um Unittests, und \texttt{Pylint} überprüft den Code auf Fehler, und versucht einen bestimmten Codestandard zu erreichen.
+\texttt{Nose} kümmert sich um Unittests, und \texttt{Pylint} überprüft den Code auf Fehler, und versucht einen bestimmten Codestandard zu erreichen. \\
+
+\newpage
+
+\subsection{Integriere dein CSV-Projekt in Jenkins, indem du es mit Git verbindest}
+
+Die nächsten Schritte habe ich aus dem Tutorial übernommen. \cite{steveblog} \\ \\
+Unterpunkte: 
+\begin{itemize}
+	\item Our first job
+	\item 1 - Where to get the source
+	\item 2 - When to run the job
+	\item 3 - What to run \\\\
+	Wichtig! Hier die Shell je nach System selbst anpassen!
+	\item 4 - Interpret the results \\\\
+	Auch hier einige wichtige Schritte, dieses Mal um die Plugins richtig zu verwenden.
+	\item Run the job
+\end{itemize}
+
+\subsection{Konfiguriere Jenkins so, dass deine Unit Tests automatisch bei jedem Build durchgeführt werden inkl. Berichte über erfolgreiche / fehlgeschlagene Tests und Coverage}
+
+Ein erster Build wird fertiggestellt mit folgendem Output:
+
+\begin{lstlisting}[frame=single,language=bash, caption=Build \#1]
+Started by an SCM change
+Building in workspace /var/lib/jenkins/jobs/csv/workspace
+> git rev-parse --is-inside-work-tree # timeout=10
+Fetching changes from the remote Git repository
+> git config remote.origin.url https://github.com/mweinberger-tgm/Continuous-Integration.git #
+timeout=10
+Fetching upstream changes from https://github.com/mweinberger-tgm/Continuous-Integration.git
+> git --version # timeout=10
+> git -c core.askpass=true fetch --tags --progress https://github.com/mweinberger-tgm/Continuous-Integration.git
++refs/heads/*:refs/remotes/origin/*
+> git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+> git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
+Checking out Revision 8c6b0b6d136c67dbdda6e213fe310bfde36b7321
+(refs/remotes/origin/master)
+> git config core.sparsecheckout # timeout=10
+> git checkout -f 8c6b0b6sdfg235sfg324da6e213fe310bfde36b7321
+> git rev-list 01c4c4cfef6607d5vfbwedsdfdf235a5507d901e9873 # timeout=10
+[workspace] $ /bin/sh -xe /tmp/hudson6843542523459213337267.sh
+----------------------------------------------------------------------
+Ran 5 tests in 0.040s
+
+...
+
+
+
+
+
+
+Mit Shell:
+
+PYTHONPATH=''
+Nosetests-3.4 --with-xunit --all-modules --traverse-namespace --with-coverage --cover-package=project1 --cover-inclusive
+python -m coverage xml
+pylint -f parseable -d I0011,R0801 CSVReader.py | tee pylint.out
+
+\end{lstlisting}
+
+Daraufhin war das gewünschte Ergebnis sichtbar. Link zum Repo \cite{repo}
+
+\begin{figure}[!h]
+	\begin{center}
+		\includegraphics[width=1\linewidth]{images/coverage}
+		\caption{Beispiel Code Coverage}
+		\label{Beispiel Code Coverage}
+	\end{center}
+\end{figure}
 
 \clearpage
 
